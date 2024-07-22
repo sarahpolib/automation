@@ -1,0 +1,112 @@
+install.packages("tuneR")
+install.packages("seewave")
+
+library(tuneR)
+library(seewave)
+
+# Definir o caminho para a pasta
+input_folder <- "C:/Users/sarah/Downloads/ProjetoCoesaoDispersao/ProjetoCoesaoDispersao_Amostra2-revisado/amostra2-audios"
+
+# Listar todos os arquivos na pasta
+file_names <- list.files(input_folder)
+
+# Mostrar os nomes dos arquivos
+print(file_names)
+
+# Caminho para o arquivo de saída
+output_file <- "C:/Users/sarah/Downloads/ProjetoCoesaoDispersao/ProjetoCoesaoDispersao_Amostra2-revisado/amostra2-audios/amostra2-arquivos"
+
+# Salvar os nomes dos arquivos em um arquivo de texto
+writeLines(file_names, output_file)
+
+output_folder <- "C:/Users/sarah/Downloads/ProjetoCoesaoDispersao/ProjetoCoesaoDispersao_Amostra2-revisado/amostra2-audios/16kHz"
+
+
+# Função para reajustar a taxa de amostragem
+resample_audio <- function(input_file, output_file, new_rate = 16000) {
+  # Carregar o arquivo de áudio
+  audio <- readWave(input_file)
+  
+  # Reajustar a taxa de amostragem
+  audio_resampled <- resamp(audio, f = audio@samp.rate, g = new_rate, output = "Wave")
+  
+  # Salvar o arquivo de áudio com a nova taxa de amostragem
+  writeWave(audio_resampled, output_file)
+}
+
+# Função para processar todos os arquivos
+resample_all_files <- function(input_folder, output_folder, new_rate = 16000) {
+  # Lista de arquivos a serem processados
+  file_names <- c(
+    "ALCP_2016MA+_JefersonL_editLivia.wav",
+    "ALCP_2017FA+_AdrieleS_editJulia.wav",
+    "ALCP_2017FB-_LucimaraF_editJulia.wav",
+    "ALCP_2017MA-_DanielS_editJulia.wav",
+    "ALCP_2017MA-_WellingtonF_editSarah.wav",
+    "ALCP_2017MB-_JoseO_editJulia.wav",
+    "ALCP_2017MB-_JosueA._editJulia.wav",
+    "ALCP_2018FA-_EraniceS_editJulia.wav",
+    "ALCP_2018FA-_MarleneN_editJulia.wav",
+    "ALCP_2018FA+_CleoniceC_editJulia.wav",
+    "ALCP_2018FB-_VeronicaS_editJulia.wav",
+    "ALCP_2018FB-_YasminS_editJulia.wav",
+    "ALCP_2018FB+_IsabelaS_editJulia.wav",
+    "ALCP_2018MA-_FabianoJ_editRafaella.wav",
+    "ALCP_2018MA+_JefersonL_editLivia.wav",
+    "ALCP_2018MA+_JoaquimS_editRafaella.wav",
+    "ALCP_2018MA+_JosiasP_editRafaella.wav",
+    "ALCP_2018MA+_WalterN_editRafaella.wav",
+    "ALCP_2018MB-_ArthurG_editRafaella.wav",
+    "ALCP_2018MB-_RicardoR_editRafaella.wav",
+    "ALCP_2018MB+_EraldoF_editRafaella.wav",
+    "ALCP_2018MB+_JorgeS_editRafaella.wav",
+    "ALCP_d2018FB+_MoniqueR_MB+_AlbertoS_editJulia.wav",
+    "PBCP_2017FA+_EdileneB_editRafaella.wav",
+    "PBCP_2017FA+_GiovanaC_editRafaella.wav",
+    "PBCP_2017FA+_MilenaP_editRafaella.wav",
+    "PBCP_2017FB-_JoelmaM_editRafaella.wav",
+    "PBCP_2017FB+_MarisaR_editSarah.wav",
+    "PBCP_2017FB+_RoselinaM_editSarah.wav",
+    "PBCP_2018FA-_ValentinaM_editSarah.wav",
+    "PBCP_2018FA+_AmandaP_editSarah.wav",
+    "PBCP_2018FA+_PenelopeM_editSarah.wav",
+    "PBCP_2018FA+_RitaS_editSarah.wav",
+    "PBCP_2018FB-_LucianaB_editSarah.wav",
+    "PBCP_2018FB-_MarianaS_editSarah.wav",
+    "PBCP_2018FB-_RosemaraA_editSarah.wav",
+    "PBCP_2018FB+_MelanieG_editSarah.wav",
+    "PBCP_2018MA-_JonasP_editSarah.wav",
+    "PBCP_2018MB+_ClaudineiP_editSarah.wav",
+    "PBCP_2018MB+_MatheusA_editSarah.wav"
+  )
+ 
+  # Loop para processar cada arquivo
+  for (file_name in file_names) {
+    # Caminho completo do arquivo de entrada
+    input_file <- file.path(input_folder, file_name)
+    
+    # Criar o nome do arquivo de saída com sufixo _16khz
+    output_file <- file.path(output_folder, sub("\\.wav$", "_16khz.wav", file_name))
+    
+    # Verificar se o arquivo de entrada existe
+    if (file.exists(input_file)) {
+      # Reajustar a taxa de amostragem
+      resample_audio(input_file, output_file, new_rate)
+      
+      # Mostrar mensagem de conclusão para o arquivo
+      cat("Arquivo processado:", file_name, "\n")
+    } else {
+      # Mostrar mensagem de aviso se o arquivo não existir
+      cat("Arquivo não encontrado:", file_name, "\n")
+    }
+  }
+}
+
+# Caminho para a pasta de entrada e de saída
+input_folder <- "C:/Users/sarah/Downloads/ProjetoCoesaoDispersao/ProjetoCoesaoDispersao_Amostra2-revisado/amostra2-audios"
+output_folder <- "C:/Users/sarah/Downloads/ProjetoCoesaoDispersao/ProjetoCoesaoDispersao_Amostra2-revisado/amostra2-audios/16kHZ"
+
+
+# Chamar a função para processar todos os arquivos
+resample_all_files(input_folder, output_folder)
+
